@@ -95,6 +95,7 @@ func (c *Client) ListStyles(draft bool) ([]ListStyle, error) {
 	} else {
 		q.Add("draft", "false")
 	}
+	q.Add("fresh", "true")
 	url.RawQuery = q.Encode()
 
 	var allStyles []ListStyle
