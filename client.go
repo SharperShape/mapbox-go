@@ -12,6 +12,13 @@ import (
 	"github.com/pkg/errors"
 )
 
+type SortBy string
+
+const (
+	SortByCreated  SortBy = "created"
+	SortByModified SortBy = "modified"
+)
+
 type Client struct {
 	username string
 	token    string
