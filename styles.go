@@ -48,7 +48,7 @@ type Style struct {
 	// while a greater value like 60 looks ahead towards the horizon.
 	// The style pitch will be used only if the map has not been positioned by other means
 	// (e.g. map options or user interaction).
-	Pitch *int64 `json:"pitch,omitempty"`
+	Pitch *float64 `json:"pitch,omitempty"`
 	// The global light source.
 	Light *Light `json:"light,omitempty"`
 	// Data source specifications.
