@@ -3,6 +3,7 @@ package mapbox
 import (
 	"path"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/pkg/errors"
@@ -45,6 +46,30 @@ type Tileset struct {
 	Status      string     `json:"status,omitempty"`
 }
 
+type TileJSON struct {
+	Bounds       [4]float64    `json:"bounds,omitempty"`
+	Center       [3]float64    `json:"center,omitempty"`
+	Created      int64         `json:"created,omitempty"`
+	Format       string        `json:"format,omitempty"`
+	MinZoom      int64         `json:"minzoom,omitempty"`
+	MaxZoom      int64         `json:"maxzoom,omitempty"`
+	Name         string        `json:"name,omitempty"`
+	Scheme       string        `json:"scheme,omitempty"`
+	TileJSON     string        `json:"tile_json,omitempty"`
+	Tiles        []string      `json:"tiles,omitempty"`
+	VectorLayers []VectorLayer `json:"vector_layers,omitempty"`
+}
+
+type VectorLayer struct {
+	Description string            `json:"description,omitempty"`
+	Fields      map[string]string `json:"fields,omitempty"`
+	ID          string            `json:"id,omitempty"`
+	MaxZoom     int64             `json:"maxzoom,omitempty"`
+	MinZoom     int64             `json:"minzoom,omitempty"`
+	Source      string            `json:"source,omitempty"`
+	SourceName  string            `json:"source_name,omitempty"`
+}
+
 func (c *Client) ListTilesets(params ListTilesetsParams) ([]Tileset, error) {
 
 	url := c.baseURL
@@ -82,4 +107,21 @@ func (c *Client) ListTilesets(params ListTilesetsParams) ([]Tileset, error) {
 	}
 
 	return allTilesets, nil
+}
+
+func (c *Client) GetTileJSON(tilesetIDs ...string) (TileJSON, error) {
+
+	ids := strings.Join(tilesetIDs, ",")
+
+	url := c.baseURL
+	url.Path = path.Join(url.Path, "v4", ids) + ".json"
+
+	var metadata TileJSON
+
+	_, err := c.do("GET", url, nil, &metadata)
+	if err != nil {
+		return TileJSON{}, err
+	}
+
+	return metadata, nil
 }
