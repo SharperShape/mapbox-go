@@ -19,12 +19,16 @@ const (
 	SortByModified SortBy = "modified"
 )
 
+type HTTPClient interface {
+	Do(req *http.Request) (*http.Response, error)
+}
+
 type Client struct {
 	username string
 	token    string
 	baseURL  url.URL
 
-	HttpClient *http.Client
+	HttpClient HTTPClient
 }
 
 func NewClient(username, token string) *Client {

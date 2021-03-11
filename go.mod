@@ -1,4 +1,4 @@
-module github.com/myyra/mapbox-go
+module github.com/SharperShape/mapbox-go
 
 go 1.15
 
