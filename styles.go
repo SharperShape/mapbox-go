@@ -1,6 +1,7 @@
 package mapbox
 
 import (
+	"database/sql/driver"
 	"encoding/json"
 	"path"
 	"time"
@@ -82,7 +83,27 @@ type Style struct {
 	// Access control for the style, either public or private.
 	// Private styles require an access token belonging to the owner.
 	// Public styles may be requested with an access token belonging to any user.
-	Visibility string
+	Visibility string `json:"visibility,omitempty"`
+	// Indicates whether the style is a draft (true) or whether it has been published (false)
+	Draft bool `json:"draft"`
+}
+
+// Make the Style struct implement the driver.Valuer interface. This method
+// simply returns the JSON-encoded representation of the struct.
+func (s Style) Value() (driver.Value, error) {
+	res, err := json.Marshal(s)
+	return res, errors.WithStack(err)
+}
+
+// Make the Style struct implement the sql.Scanner interface. This method
+// simply decodes a JSON-encoded value into the struct fields.
+func (s *Style) Scan(value interface{}) error {
+	b, ok := value.([]byte)
+	if !ok {
+		return errors.New("type assertion to []byte failed")
+	}
+
+	return errors.WithStack(json.Unmarshal(b, &s))
 }
 
 func (c *Client) ListStyles(draft bool) ([]ListStyle, error) {
