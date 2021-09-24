@@ -67,7 +67,7 @@ type Style struct {
 	// For example "mapbox://fonts/mapbox/{fontstack}/{range}.pbf"
 	Glyphs *string `json:"glyphs,omitempty"`
 	// Layers will be drawn in the order of this array.
-	Layers []json.RawMessage `json:"layers,omitempty"`
+	Layers []*Layer `json:"layers,omitempty"`
 	// A global transition definition to use as a default across properties,
 	// to be used for timing transitions between one value and the next when no property-specific transition is set.
 	// Collision-based symbol fading is controlled independently of the style's transition property.
