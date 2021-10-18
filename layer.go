@@ -7,8 +7,8 @@ type Layer struct {
 	Type        string           `json:"type" binding:"required,oneof=fill line symbol circle heatmap fill-extrusion raster hillshade background sky"`
 	Filter      *json.RawMessage `json:"filter,omitempty"`
 	Layout      *json.RawMessage `json:"layout,omitempty"`
-	MaxZoom     *int             `json:"maxzoom,omitempty"`
-	MinZoom     *int             `json:"minzoom,omitempty"`
+	MaxZoom     *float64         `json:"maxzoom,omitempty"`
+	MinZoom     *float64         `json:"minzoom,omitempty"`
 	Metadata    *json.RawMessage `json:"metadata,omitempty"`
 	Paint       *json.RawMessage `json:"paint,omitempty"`
 	Source      *string          `json:"source,omitempty"`
