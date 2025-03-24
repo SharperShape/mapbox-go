@@ -3,6 +3,7 @@ package mapbox
 import (
 	"database/sql/driver"
 	"encoding/json"
+	"fmt"
 	"path"
 	"time"
 
@@ -97,13 +98,18 @@ func (s Style) Value() (driver.Value, error) {
 
 // Make the Style struct implement the sql.Scanner interface. This method
 // simply decodes a JSON-encoded value into the struct fields.
-func (s *Style) Scan(value interface{}) error {
-	b, ok := value.([]byte)
-	if !ok {
-		return errors.New("type assertion to []byte failed")
+func (s *Style) Scan(src any) error {
+	var data []byte
+	switch src := src.(type) {
+	case []byte:
+		data = src
+	case string:
+		data = []byte(src)
+	default:
+		return fmt.Errorf("cannot scan from type %T", src)
 	}
 
-	return errors.WithStack(json.Unmarshal(b, &s))
+	return errors.WithStack(json.Unmarshal(data, &s))
 }
 
 func (c *Client) ListStyles(draft bool) ([]ListStyle, error) {
